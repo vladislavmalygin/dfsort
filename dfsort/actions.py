@@ -74,3 +74,15 @@ def extract_archive(src, dest_dir, conflict='rename'):
         logger.warning(f"Could not remove archive {src}: {e}")
 
     return True
+
+def delete_file(src, **kwargs):
+    """
+    Удаляет файл.
+    """
+    try:
+        os.remove(src)
+        logger.info(f"Deleted file: {src}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to delete {src}: {e}")
+        return False

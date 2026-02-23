@@ -3,6 +3,8 @@ import magic
 import os
 import logging
 
+logger = logging.getLogger('dfsort')
+
 class Rule:
     def __init__(self, rule_dict):
         self.name = rule_dict.get('name', 'Unnamed')
