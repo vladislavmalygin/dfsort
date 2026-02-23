@@ -37,10 +37,10 @@ validpgpkeys=('SKIP')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
-    # Убедимся, что все файлы на месте
+    # Проверяем наличие setup.py без использования error
     if [ ! -f "setup.py" ]; then
-        error "setup.py not found"
-        return 1
+        printf "Ошибка: setup.py не найден в %s\n" "$PWD"
+        exit 1
     fi
 }
 
@@ -52,7 +52,10 @@ build() {
 check() {
     cd "$srcdir/$pkgname-$pkgver"
     # Простая проверка импорта
-    python -c "import dfsort; print('Module loaded successfully')"
+    python -c "import dfsort; print('Module loaded successfully')" || {
+        printf "Ошибка: не удалось импортировать модуль dfsort\n"
+        exit 1
+    }
 }
 
 package() {
