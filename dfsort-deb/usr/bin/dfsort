@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/bin/python3 -m dfsort.cli "$@"
+/usr/share/dfsort/venv/bin/python -m dfsort.cli "$@"

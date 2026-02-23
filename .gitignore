@@ -1,3 +1,81 @@
-.env
-.idea
-dependencies.txt
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+*.tar.gz
+*.zip
+*.deb
+*.pkg.tar.zst
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Config (но не твой основной конфиг!)
+/config.yaml
+!config/config.yaml  # сохраняем пример конфига
+/config_backup.yaml
+/config_*.yaml
+
+# Local backups
+/backups/
+*.backup
+*.bak
+
+# Systemd user service (локальный)
+/.config/systemd/user/dfsort.service
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.lock
+
+# Project specific
+/dfsort-deb/  # временная папка для сборки deb
+/pkg/
+/src/
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Cache directories
+.cache/
+.cache/

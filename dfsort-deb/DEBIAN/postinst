@@ -1,42 +1,16 @@
 #!/bin/bash
-
 set -e
-
 echo "=================================================="
 echo "✅ Установка DFSORT..."
 echo "=================================================="
-
-# 1. Установка системных зависимостей
-sudo apt update
-sudo apt install -y python3 python3-pip python3-venv pipx git
-
-# 2. Проверка версии и выбор метода установки
-if command -v pipx &> /dev/null && python3 -c "import sys; exit(0 if sys.version_info >= (3,11) else 1)"; then
-    # Для новых систем (с externally-managed)
-    echo "Установка через pipx..."
-    pipx ensurepath
-    pipx install /usr/share/dfsort
-else
-    # Для старых систем
-    echo "Установка через pip..."
-    pip3 install --upgrade pip
-    pip3 install watchdog pyyaml python-magic schedule croniter questionary
-    cd /usr/share/dfsort
-    pip3 install -e .
-fi
-
-# 3. Создание симлинка
-ln -sf /usr/local/bin/dfsort /usr/bin/dfsort 2>/dev/null || true
-
-# 4. Создание конфига если нет
-mkdir -p /etc/dfsort
-if [ ! -f /etc/dfsort/config.yaml ]; then
-    cp /usr/share/dfsort/config.yaml /etc/dfsort/ 2>/dev/null || true
-fi
-
+cd /usr/share/dfsort
+python3 -m venv venv
+venv/bin/pip install --upgrade pip
+venv/bin/pip install watchdog pyyaml python-magic schedule croniter questionary
+venv/bin/pip install -e .
+mkdir -p /var/log/dfsort
 echo "=================================================="
 echo "✅ DFSORT успешно установлен!"
 echo "=================================================="
 echo "Для настройки: dfsort --configure"
-echo "Для запуска: dfsort"
 echo "=================================================="

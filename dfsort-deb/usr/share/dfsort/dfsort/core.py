@@ -91,4 +91,4 @@ def process_all_files(directory, rules, logger, root_allowed=False, subdir_patte
                 error_count += 1
 
     logger.info(f"Once mode summary: {processed_count} processed, {skipped_count} skipped (age), {excluded_count} excluded (subdir), {error_count} errors")
-    return processed_count, skipped_count, excluded_count, error_count  # 4 значения!
+    return processed_count, skipped_count, excluded_count, error_count

@@ -1,17 +1,11 @@
 Package: dfsort
-Version: 1.0.1
+Version: 1.0.3
 Section: utils
 Priority: optional
 Architecture: all
-Depends: python3, python3-pip, python3-watchdog, python3-yaml, python3-magic
+Depends: python3 (>= 3.8), python3-pip, python3-venv, pipx, curl, wget, git
 Maintainer: Vladislav Malygin <vlad.malygin.02@gmail.com>
 Description: File Auto-Sorter - автоматическая сортировка файлов
- Автоматически сортирует файлы в папке Загрузки по категориям:
- изображения, видео, музыка, документы, архивы, образы дисков.
- Поддерживает:
-  - мониторинг в реальном времени
-  - сортировку по расписанию
-  - интерактивный конфигуратор
-  - обработку конфликтов
-  - подпапки по дате
+ Автоматически сортирует файлы в папке Загрузки по категориям.
+ Поддерживает мониторинг, расписание, интерактивный конфигуратор.
 Homepage: https://github.com/vladislavmalygin/dfsort
