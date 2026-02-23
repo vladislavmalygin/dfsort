@@ -9,7 +9,7 @@ from .config import is_subdir_allowed
 class SorterEventHandler(FileSystemEventHandler):
     """
     Обработчик событий файловой системы.
-    При создании или изменении файла вызывает _handle.
+    При создании, изменении или перемещении файла вызывает _handle.
     """
 
     def __init__(self, rules, logger, watch_dir, root_allowed=False, subdir_patterns=None, min_age_hours=0):
@@ -21,13 +21,7 @@ class SorterEventHandler(FileSystemEventHandler):
         self.subdir_patterns = subdir_patterns or []
         self.min_age_seconds = min_age_hours * 3600
         self.processed = set()
-
-        # Отладка: выведем параметры при инициализации
-        self.logger.debug(f"=== SorterEventHandler инициализирован ===")
-        self.logger.debug(f"watch_dir: {watch_dir}")
-        self.logger.debug(f"root_allowed: {root_allowed}")
-        self.logger.debug(f"subdir_patterns: {[p.pattern for p in subdir_patterns] if subdir_patterns else []}")
-        self.logger.debug(f"min_age_hours: {min_age_hours}")
+        self.logger.debug(f"SorterEventHandler инициализирован: watch_dir={watch_dir}")
 
     def on_created(self, event):
         if not event.is_directory:
@@ -37,30 +31,33 @@ class SorterEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if not event.is_directory:
             self.logger.debug(f"Событие modified: {event.src_path}")
-            time.sleep(5)
+            time.sleep(1)  # даём время на завершение записи
             self._handle(event.src_path)
 
+    def on_moved(self, event):
+        if not event.is_directory:
+            self.logger.debug(f"Событие moved: {event.src_path} -> {event.dest_path}")
+            # Удаляем старый путь из processed, чтобы обработать новый
+            if event.src_path in self.processed:
+                self.processed.remove(event.src_path)
+            self._handle(event.dest_path)
+
     def _handle(self, path):
-        self.logger.debug(f"=== _handle вызван для {path} ===")
+        self.logger.debug(f"Обработка {path}")
+
+        # Проверка существования файла
+        if not os.path.exists(path):
+            self.logger.debug(f"Файл {path} больше не существует, пропускаем")
+            return
 
         # Проверка на дубликаты
         if path in self.processed:
             self.logger.debug(f"Файл уже обработан: {path}")
             return
         self.processed.add(path)
-        self.logger.debug(f"Файл добавлен в processed")
 
-        # Проверка, находится ли файл в разрешённой подпапке
-        self.logger.debug(f"Вызываем is_subdir_allowed с параметрами:")
-        self.logger.debug(f"  path: {path}")
-        self.logger.debug(f"  watch_dir: {self.watch_dir}")
-        self.logger.debug(f"  root_allowed: {self.root_allowed}")
-        self.logger.debug(f"  subdir_patterns: {[p.pattern for p in self.subdir_patterns]}")
-
-        allowed = is_subdir_allowed(path, self.watch_dir, self.root_allowed, self.subdir_patterns)
-        self.logger.debug(f"is_subdir_allowed вернул: {allowed}")
-
-        if not allowed:
+        # Проверка разрешённой подпапки
+        if not is_subdir_allowed(path, self.watch_dir, self.root_allowed, self.subdir_patterns):
             self.logger.debug(f"Файл {path} в неразрешённой подпапке, пропускаем")
             return
 
@@ -68,9 +65,8 @@ class SorterEventHandler(FileSystemEventHandler):
         if self.min_age_seconds > 0:
             try:
                 file_age = time.time() - os.path.getmtime(path)
-                self.logger.debug(f"Возраст файла: {file_age} сек, минимум: {self.min_age_seconds} сек")
                 if file_age < self.min_age_seconds:
-                    self.logger.debug(f"Файл {path} слишком свежий ({file_age / 3600:.1f} ч), пропускаем")
+                    self.logger.debug(f"Файл {path} слишком свежий ({file_age/3600:.1f} ч), пропускаем")
                     return
             except OSError as e:
                 self.logger.error(f"Не удалось определить возраст файла {path}: {e}")
@@ -79,7 +75,6 @@ class SorterEventHandler(FileSystemEventHandler):
         self.logger.info(f"Обнаружен новый файл: {path}")
 
         try:
-            self.logger.debug(f"Вызываем process_file для {path}")
             process_file(path, self.rules)
         except Exception as e:
-            self.logger.error(f"Error processing {path}: {e}")
+            self.logger.error(f"Ошибка при обработке {path}: {e}")
