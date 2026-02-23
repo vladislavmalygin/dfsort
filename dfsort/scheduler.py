@@ -23,12 +23,10 @@ class FileScheduler:
         self.thread = None
 
     def run_once(self):
-        """Выполняет одну сортировку."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.logger.info(f"🕐 Запуск плановой сортировки в {timestamp}")
-
         try:
-            processed, skipped, excluded, errors = process_all_files(...)(
+            processed, skipped, excluded, errors = process_all_files(
                 directory=self.directory,
                 rules=self.rules,
                 logger=self.logger,
@@ -36,8 +34,8 @@ class FileScheduler:
                 subdir_patterns=self.subdir_patterns,
                 min_age_hours=self.min_age_hours
             )
-            self.logger.info(f"✅ Сортировка завершена: +{processed}, пропущено {skipped}, ошибок {errors}")
-
+            self.logger.info(
+                f"✅ Сортировка завершена: +{processed}, пропущено {skipped}, исключено {excluded}, ошибок {errors}")
         except Exception as e:
             self.logger.error(f"❌ Ошибка при плановой сортировке: {e}")
 
