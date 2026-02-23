@@ -2,6 +2,8 @@ import os
 import yaml
 from pathlib import Path
 
+from .rules import Rule
+
 def load_config(config_path):
     """
     Загружает конфигурацию из YAML-файла.
@@ -23,3 +25,8 @@ def load_config(config_path):
         config['logging']['file'] = os.path.expanduser(config['logging']['file'])
 
     return config
+
+def load_rules(config):
+    rules_data = config.get('rules', [])
+    rules = [Rule(rule_dict) for rule_dict in rules_data]
+    return rules
