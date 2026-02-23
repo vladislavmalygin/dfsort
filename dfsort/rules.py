@@ -1,6 +1,7 @@
 import re
 import magic
 import os
+import logging
 
 class Rule:
     def __init__(self, rule_dict):
@@ -29,6 +30,7 @@ class Rule:
         if self.compiled_mime:
             try:
                 mime = magic.from_file(filepath, mime=True)
+                logger.debug(f"MIME type of {filepath}: {mime}")
                 for pattern in self.compiled_mime:
                     if pattern.search(mime):
                         return True

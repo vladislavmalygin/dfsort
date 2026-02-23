@@ -1,12 +1,12 @@
+# dfsort/cli.py
 import argparse
 import logging
 import time
 import sys
 import os
-
 from watchdog.observers import Observer
 
-from .config import load_config
+from .config import load_config, load_rules
 from .logger import setup_logger
 from .handlers import SorterEventHandler
 
@@ -33,6 +33,7 @@ def main():
     log_level = config.get('logging', {}).get('level', 'INFO')
     numeric_level = getattr(logging, log_level.upper(), logging.INFO)
     logger = setup_logger(log_file, numeric_level)
+    logger.setLevel(logging.DEBUG)
 
     watch_dir = config.get('watch_directory')
     if not watch_dir:
@@ -43,11 +44,14 @@ def main():
         logger.error(f"Watch directory does not exist: {watch_dir}")
         sys.exit(1)
 
+    rules = load_rules(config)
+    logger.info(f"Loaded {len(rules)} rules")
+
     if args.once:
         logger.info("Once mode is not yet implemented. Exiting.")
         return
 
-    event_handler = SorterEventHandler(logger)
+    event_handler = SorterEventHandler(rules, logger)
     observer = Observer()
     observer.schedule(event_handler, watch_dir, recursive=False)
     observer.start()

@@ -1,14 +1,19 @@
 import time
 from watchdog.events import FileSystemEventHandler
 
+from .core import process_file
+
 class SorterEventHandler(FileSystemEventHandler):
     """
     Обработчик событий файловой системы.
     При создании или изменении файла вызывает _handle.
     """
-    def __init__(self, logger):
+
+    def __init__(self, rules, logger, min_age_hours=0):
         super().__init__()
+        self.rules = rules
         self.logger = logger
+        self.min_age_seconds = min_age_hours * 3600
         self.processed = set()
 
     def on_created(self, event):
@@ -27,7 +32,8 @@ class SorterEventHandler(FileSystemEventHandler):
 
         self.logger.info(f"Обнаружен новый файл: {path}")
 
-        # Будущая сортировка
-        # process_file(path, ...)
+        try:
+            process_file(path, self.rules)
+        except Exception as e:
+            self.logger.error(f"Error processing {path}: {e}")
 
-        # Будущее удаление записей

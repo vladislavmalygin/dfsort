@@ -1,6 +1,6 @@
 watch_directory: "~/Загрузки"
 
-time_to_move: 48
+time_to_move: 0
 
 rules:
   - name: "Images"
@@ -45,4 +45,4 @@ rules:
 
 logging:
   file: "~/.local/share/dfsort/dfsort.log"
-  level: INFO
+  level: DEBUG
