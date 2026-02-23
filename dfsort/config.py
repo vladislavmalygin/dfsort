@@ -86,6 +86,7 @@ def load_config(config_path):
 
     config['daemon_type'] = mode_type
 
+    # ВАЖНО: возвращаем ТОЛЬКО config, не кортеж!
     return config
 
 
@@ -102,26 +103,17 @@ def load_rules(config):
 def is_subdir_allowed(filepath, watch_dir, root_allowed, subdir_patterns):
     """
     Проверяет, находится ли файл в разрешённой подпапке.
-
-    Args:
-        filepath: полный путь к файлу
-        watch_dir: наблюдаемая директория
-        root_allowed: разрешена ли обработка файлов в корне
-        subdir_patterns: список скомпилированных regex паттернов для подпапок
-
-    Returns:
-        bool: True если файл можно обрабатывать
     """
     try:
         rel_path = os.path.relpath(filepath, watch_dir)
     except ValueError:
         return False
 
-    # Файл в корневой папке (не содержит разделителей)
+    # Файл в корневой папке
     if os.sep not in rel_path:
         return root_allowed
 
-    # Файл в подпапке - проверяем имя первой подпапки
+    # Файл в подпапке
     first_subdir = rel_path.split(os.sep)[0]
 
     for pattern in subdir_patterns:
@@ -134,7 +126,6 @@ def is_subdir_allowed(filepath, watch_dir, root_allowed, subdir_patterns):
 def get_allowed_subdirs(watch_dir, subdir_patterns):
     """
     Возвращает список имён подпапок, которые разрешены для обработки.
-    Полезно для предварительного сканирования.
     """
     allowed = []
     try:

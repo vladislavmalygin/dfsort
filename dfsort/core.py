@@ -39,14 +39,14 @@ def process_file(filepath, rules):
 def process_all_files(directory, rules, logger, root_allowed=False, subdir_patterns=None, min_age_hours=0):
     """
     Рекурсивно обходит директорию и обрабатывает только файлы в разрешённых подпапках.
-    Используется в режиме --once.
+    Возвращает кортеж (processed, skipped, excluded, errors)
     """
     subdir_patterns = subdir_patterns or []
     min_age_seconds = min_age_hours * 3600
     processed_count = 0
     skipped_count = 0
-    error_count = 0
     excluded_count = 0
+    error_count = 0
 
     logger.info(f"Starting process_all_files in {directory}")
     logger.info(f"root_allowed: {root_allowed}")
@@ -64,13 +64,13 @@ def process_all_files(directory, rules, logger, root_allowed=False, subdir_patte
             if filename.startswith('.'):
                 continue
 
-            # ПРОВЕРКА: находится ли файл в разрешённой подпапке?
+            # Проверка разрешённых подпапок
             if not is_subdir_allowed(filepath, directory, root_allowed, subdir_patterns):
                 logger.debug(f"File {filepath} in non-allowed subdirectory, skipping")
                 excluded_count += 1
                 continue
 
-            # Проверка возраста файла
+            # Проверка возраста
             if min_age_seconds > 0:
                 try:
                     file_age = time.time() - os.path.getmtime(filepath)
@@ -91,4 +91,4 @@ def process_all_files(directory, rules, logger, root_allowed=False, subdir_patte
                 error_count += 1
 
     logger.info(f"Once mode summary: {processed_count} processed, {skipped_count} skipped (age), {excluded_count} excluded (subdir), {error_count} errors")
-    return processed_count, skipped_count, error_count
+    return processed_count, skipped_count, excluded_count, error_count  # 4 значения!
