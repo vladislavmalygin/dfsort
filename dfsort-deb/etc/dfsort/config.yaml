@@ -1,0 +1,32 @@
+# /etc/dfsort/config.yaml
+# Основной конфигурационный файл DFSORT
+
+# Папка для наблюдения
+watch_directory: "~/Загрузки"
+
+# Через сколько часов обрабатывать файлы (0 = сразу)
+time_to_move: 48
+
+# Режим работы демона
+daemon_mode:
+  type: "watchdog"  # watchdog, interval, cron
+
+# Какие подпапки обрабатывать (остальные игнорируются)
+process_subdirs:
+  - "."  # корневая папка
+
+# Правила сортировки
+rules:
+  - name: "Images"
+    patterns:
+      - ".*\\.(jpg|jpeg|png|gif|bmp|svg|webp|ico)$"
+    mime_types:
+      - "image/.*"
+    destination: "~/Изображения"
+    action: move
+    conflict: rename
+
+# Логирование
+logging:
+  file: "~/.local/share/dfsort/dfsort.log"
+  level: INFO

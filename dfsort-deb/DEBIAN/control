@@ -1,0 +1,10 @@
+Package: dfsort
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3, python3-pip, python3-watchdog, python3-yaml, python3-magic
+Maintainer: Vladislav Malygin <vlad.malygin.02@gmail.com>
+Description: File Auto-Sorter
+ Автоматическая сортировка файлов в Загрузках.
+ Раскладывает картинки, видео, музыку, документы по папкам.
