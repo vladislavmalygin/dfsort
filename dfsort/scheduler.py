@@ -28,7 +28,7 @@ class FileScheduler:
         self.logger.info(f"🕐 Запуск плановой сортировки в {timestamp}")
 
         try:
-            processed, skipped, errors = process_all_files(
+            processed, skipped, excluded, errors = process_all_files(...)(
                 directory=self.directory,
                 rules=self.rules,
                 logger=self.logger,
