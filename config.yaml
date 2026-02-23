@@ -2,6 +2,15 @@ watch_directory: "~/Загрузки"
 
 time_to_move: 48
 
+
+#daemon_mode:
+#  type: "cron"
+#  schedule: "0 9 * * *" - каждый день в 9 утра
+
+#daemon_mode:
+#  type: "cron"
+#  schedule: "30 18 * * 1"  - каждый понедельник в 18:30
+
 ## Только корень
 #process_subdirs:
 #  - "."

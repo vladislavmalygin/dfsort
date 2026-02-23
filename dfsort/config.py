@@ -59,6 +59,33 @@ def load_config(config_path):
     config['root_allowed'] = root_allowed
     config['subdir_patterns'] = subdir_patterns
 
+    # Загружаем настройки режима демона
+    daemon_mode = config.get('daemon_mode', {})
+    mode_type = daemon_mode.get('type', 'watchdog')
+
+    if mode_type == 'interval':
+        interval = daemon_mode.get('interval', 300)
+        # Поддерживаем разные единицы измерения
+        unit = daemon_mode.get('unit', 'seconds')
+        if unit == 'minutes':
+            interval *= 60
+        elif unit == 'hours':
+            interval *= 3600
+        elif unit == 'days':
+            interval *= 86400
+
+        config['daemon_interval'] = interval
+        config['daemon_unit'] = unit
+
+    elif mode_type == 'cron':
+        cron_expr = daemon_mode.get('schedule')
+        if not cron_expr:
+            # Значение по умолчанию: каждый час
+            cron_expr = "0 * * * *"
+        config['daemon_cron'] = cron_expr
+
+    config['daemon_type'] = mode_type
+
     return config
 
 
