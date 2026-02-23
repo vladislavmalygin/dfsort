@@ -13,13 +13,13 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 setup(
     name="dfsort",
-    version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    version="1.0.2",
+    author="Vladislav Malygin",
+    author_email="malyginvlad6220@gmail.com",
     description="File Auto-Sorter - автоматическая сортировка файлов",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourname/dfsort",
+    url="https://github.com/vladislav/dfsort",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

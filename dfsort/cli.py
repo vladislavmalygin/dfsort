@@ -22,7 +22,7 @@ scheduler = None
 observer = None
 
 # Версия программы
-VERSION = "0.5.0"
+VERSION = "1.0.2"
 
 def check_and_create_config(config_path):
     """
