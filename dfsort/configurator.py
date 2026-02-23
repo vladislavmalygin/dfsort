@@ -587,20 +587,42 @@ def main():
     action = questionary.select(
         "Что делаем дальше?",
         choices=[
-            {"name": "🚀 Запустить сортировщик с этим конфигом", "value": "run"},
+            {"name": "🚀 Запустить сортировщик сейчас (однократно)", "value": "once"},
+            {"name": "🔄 Запустить как демон (в фоне)", "value": "daemon"},
+            {"name": "⚙️  Настроить автозапуск демона", "value": "enable"},
             {"name": "📝 Продолжить редактирование", "value": "edit"},
             {"name": "❌ Выйти", "value": "exit"}
         ]
     ).ask()
 
-    if action == "run":
+    if action == "once":
+        print(f"{Colors.CYAN}Запуск однократной сортировки...{Colors.END}")
         from .cli import main as dfsort_main
-        sys.argv = ['dfsort', '--config', str(configurator.CONFIG_PATH)]
+        sys.argv = ['dfsort', '--config', str(configurator.CONFIG_PATH), '-o']
         dfsort_main()
+
+    elif action == "daemon":
+        print(f"{Colors.CYAN}Запуск демона...{Colors.END}")
+        os.system("systemctl --user start dfsort")
+        os.system("systemctl --user status dfsort")
+        print(f"{Colors.GREEN}✓ Демон запущен{Colors.END}")
+
+    elif action == "enable":
+        print(f"{Colors.CYAN}Настройка автозапуска демона...{Colors.END}")
+        os.system("systemctl --user enable dfsort")
+        os.system("systemctl --user start dfsort")
+        print(f"{Colors.GREEN}✓ Демон добавлен в автозагрузку и запущен{Colors.END}")
+
     elif action == "edit":
         configurator._edit_config()
+
     else:
         print(f"{Colors.GREEN}До свидания!{Colors.END}")
+
+    # После завершения показываем статус демона
+    if action in ["daemon", "enable"]:
+        print(f"\n{Colors.CYAN}Статус демона:{Colors.END}")
+        os.system("systemctl --user status dfsort --no-pager")
 
 
 if __name__ == '__main__':
