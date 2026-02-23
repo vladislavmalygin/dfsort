@@ -1,7 +1,7 @@
 # Maintainer: vlad.malygin.02@gmail.com
 
 pkgname=dfsort
-pkgver=0.5.2
+pkgver=0.5.3
 pkgrel=1
 pkgdesc="File Auto-Sorter - автоматическая сортировка файлов"
 arch=('any')
