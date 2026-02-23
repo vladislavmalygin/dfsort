@@ -1,7 +1,12 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+try:
+    with open("README.md", "r", encoding="utf-8") as fh:
+        long_description = fh.read()
+    long_description_content_type = "text/markdown"
+except FileNotFoundError:
+    long_description = "File Auto-Sorter - автоматическая сортировка файлов"
+    long_description_content_type = "text/plain"
 
 with open("requirements.txt", "r", encoding="utf-8") as f:
     requirements = f.read().splitlines()
