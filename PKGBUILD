@@ -15,7 +15,7 @@ depends=(
     'python-magic'
     'python-six'
     'python-wcwidth'
-    'python-prompt-toolkit'
+    'python-prompt_toolkit'
     'python-pygments'
     'file'
 )
