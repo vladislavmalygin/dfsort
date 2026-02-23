@@ -1,0 +1,48 @@
+watch_directory: "~/Загрузки"
+
+time_to_move: 48
+
+rules:
+  - name: "Images"
+    patterns:
+      - ".*\\.(jpg|jpeg|png|gif|bmp|svg|webp)$"
+    mime_types:
+      - "image/.*"
+    destination: "~/Изображения"
+    action: move
+    conflict: rename
+
+  - name: "Videos"
+    patterns:
+      - ".*\\.(mp4|avi|mkv|mov|wmv|flv|webm)$"
+    mime_types:
+      - "video/.*"
+    destination: "~/Видео"
+    action: move
+    conflict: rename
+
+  - name: "Archives"
+    patterns:
+      - ".*\\.(zip|tar\\.gz|tgz|rar|7z)$"
+    mime_types:
+      - "application/zip"
+      - "application/x-tar"
+      - "application/x-gzip"
+      - "application/x-7z-compressed"
+    action: extract
+    destination: "~/Загрузки/Архивы"
+
+  - name: "Documents"
+    patterns:
+      - ".*\\.(pdf|docx?|xlsx?|txt|odt|ods)$"
+    mime_types:
+      - "application/pdf"
+      - "application/msword"
+      - "text/.*"
+      - "application/vnd.oasis.opendocument.*"
+    destination: "~/Документы"
+    action: move
+
+logging:
+  file: "~/.local/share/dfsort/dfsort.log"
+  level: INFO
