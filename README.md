@@ -1,3 +1,6 @@
+Невероятно ранняя альфа, использовать на свой страх и риск
+
+
 # 1. Клонируем репозиторий
 git clone https://github.com/vladislavmalygin/dfsort.git
 cd dfsort
